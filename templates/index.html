@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Booking System</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<h1>Service Booking System</h1>
+
+<form method="POST" action="/add">
+    <input type="text" name="client_name" placeholder="Name" required>
+    <input type="text" name="service" placeholder="Service" required>
+    <input type="text" name="time" placeholder="Time" required>
+    <button type="submit">Add</button>
+</form>
+
+<h2>Bookings</h2>
+
+<ul>
+    {% for b in bookings %}
+        <li>
+            {{ b.client_name }} | {{ b.service }} | {{ b.time }}
+            <a href="/delete/{{ b.client_name }}">❌</a>
+        </li>
+    {% endfor %}
+</ul>
+
+</body>
+</html>
