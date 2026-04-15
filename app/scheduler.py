@@ -35,5 +35,12 @@ class Scheduler:
                 return "Booking deleted!"
         return "Booking not found!"
 
+    def find_booking(self, client_name):
+        result = []
+        for b in self.bookings:
+            if client_name.lower() in b.client_name.lower():
+                result.append(b)
+        return result
+
     def get_all(self):
         return self.bookings
