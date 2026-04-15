@@ -1,5 +1,5 @@
 import json
-from booking import Booking
+from app.booking import Booking
 
 class Scheduler:
     def __init__(self, filename="data.json"):
