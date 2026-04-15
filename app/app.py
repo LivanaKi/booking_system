@@ -22,5 +22,11 @@ def delete(name):
     scheduler.delete_booking(name)
     return redirect("/")
 
+@app.route("/search", methods=["POST"])
+def search():
+    name = request.form["client_name"]
+    results = scheduler.find_booking(name)
+    return render_template("index.html", bookings=results)
+
 if __name__ == "__main__":
     app.run(debug=True)

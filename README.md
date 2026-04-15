@@ -1,4 +1,4 @@
-# Booking System Final
+# Booking System
 
 Web-based system for managing service bookings.
 
