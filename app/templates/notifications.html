@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Мої email-сповіщення</h1>
+<p class="muted">Якщо SMTP не налаштований, система працює у demo-режимі: повідомлення зберігаються в БД і друкуються у терміналі.</p>
+{% include '_notifications_block.html' %}
+{% endblock %}

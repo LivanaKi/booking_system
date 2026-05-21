@@ -1,0 +1,18 @@
+<table>
+    <tr><th>ID</th><th>Клієнт</th><th>Послуга</th><th>Спеціаліст</th><th>Дата</th><th>Час</th><th>Статус</th><th>Дії</th></tr>
+    {% for b in bookings %}
+    <tr>
+        <td>{{ b.id }}</td>
+        <td>{{ b.client_name }}<br><span class="muted mini">{{ b.client_email }}</span></td>
+        <td>{{ b.service_name }}<br><span class="muted mini">{{ b.duration_minutes }} хв, {{ b.price }} грн</span></td>
+        <td>{{ b.specialist_name }}<br><span class="muted mini">{{ b.specialization }}</span></td>
+        <td>{{ b.booking_date }}</td><td>{{ b.booking_time }}</td><td><span class="badge">{{ status_labels[b.status] }}</span></td>
+        <td class="actions">
+            {% if session.role == 'admin' and b.status == 'new' %}<form method="post" action="{{ url_for('confirm_booking', booking_id=b.id) }}"><button class="btn success">Підтвердити</button></form>{% endif %}
+            {% if session.role in ['admin','specialist'] and b.status == 'confirmed' %}<form method="post" action="{{ url_for('complete_booking', booking_id=b.id) }}"><button class="btn light">Виконано</button></form>{% endif %}
+            {% if session.role in ['admin','specialist'] and b.status == 'confirmed' %}<form method="post" action="{{ url_for('no_show_booking', booking_id=b.id) }}"><button class="btn secondary">No-show</button></form>{% endif %}
+            {% if session.role in ['admin','client'] and b.status not in ['cancelled','completed','no_show'] %}<form method="post" action="{{ url_for('cancel_booking', booking_id=b.id) }}"><button class="btn danger">Скасувати</button></form>{% endif %}
+        </td>
+    </tr>
+    {% else %}<tr><td colspan="8">Записів немає</td></tr>{% endfor %}
+</table>

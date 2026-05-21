@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Каталог послуг і персоналу</h1>
+
+<h2>Послуги</h2>
+<table><tr><th>ID</th><th>Назва</th><th>Категорія</th><th>Тривалість</th><th>Ціна</th><th>Активна</th></tr>{% for s in services %}<tr><td>{{ s.id }}</td><td>{{ s.name }}</td><td>{{ s.category }}</td><td>{{ s.duration_minutes }} хв</td><td>{{ s.price }} грн</td><td>{{ 'так' if s.is_active else 'ні' }}</td></tr>{% endfor %}</table>
+
+<h2>Додати спеціаліста</h2>
+<form method="post" action="{{ url_for('add_specialist') }}" class="card">
+    <div class="cards">
+        <div class="form-row"><label>Ім'я</label><input name="name" required></div>
+        <div class="form-row"><label>Email</label><input name="email" type="email" required></div>
+        <div class="form-row"><label>Логін</label><input name="login" required></div>
+        <div class="form-row"><label>Пароль</label><input name="password" value="spec123" required></div>
+        <div class="form-row"><label>Спеціалізація</label><input name="specialization" required></div>
+        <div class="form-row"><label>Початок роботи</label><input name="work_start" type="time" value="09:00"></div>
+        <div class="form-row"><label>Кінець роботи</label><input name="work_end" type="time" value="17:00"></div>
+    </div>
+    <label>Послуги спеціаліста</label>
+    {% for s in services %}<label class="mini"><input style="width:auto" type="checkbox" name="service_ids" value="{{ s.id }}"> {{ s.name }}</label>{% endfor %}
+    <br><button class="btn">Додати спеціаліста</button>
+</form>
+
+<h2>Спеціалісти</h2>
+<table><tr><th>ID</th><th>Ім'я</th><th>Email</th><th>Редагування</th><th>Видалення</th></tr>
+{% for sp in specialists %}
+<tr>
+<td>{{ sp.id }}</td><td>{{ sp.name }}</td><td>{{ sp.email }}</td>
+<td>
+<form method="post" action="{{ url_for('update_specialist', specialist_id=sp.id) }}">
+    <div class="form-row"><label>Спеціалізація</label><input name="specialization" value="{{ sp.specialization }}"></div>
+    <div class="cards">
+        <div class="form-row"><label>Початок</label><input name="work_start" type="time" value="{{ sp.work_start }}"></div>
+        <div class="form-row"><label>Кінець</label><input name="work_end" type="time" value="{{ sp.work_end }}"></div>
+    </div>
+    <label>Послуги</label>
+    {% set current = (service_map.get(sp.id) or '') %}
+    {% for s in services %}<label class="mini"><input style="width:auto" type="checkbox" name="service_ids" value="{{ s.id }}" {% if s.name in current %}checked{% endif %}> {{ s.name }}</label>{% endfor %}
+    <button class="btn secondary">Оновити</button>
+</form>
+</td>
+<td>
+<form method="post" action="{{ url_for('delete_specialist', specialist_id=sp.id) }}" onsubmit="return confirm('Видалити спеціаліста?')">
+    <button class="btn danger">Видалити</button>
+</form>
+</td>
+</tr>
+{% endfor %}
+</table>
+{% endblock %}

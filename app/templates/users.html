@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Керування користувачами</h1>
+<div class="card">
+<h2>Додати користувача</h2>
+<form method="post" action="{{ url_for('add_user') }}">
+    <div class="cards">
+        <div class="form-row"><label>ПІБ</label><input name="name" required></div>
+        <div class="form-row"><label>Email</label><input type="email" name="email" required></div>
+        <div class="form-row"><label>Логін</label><input name="login" required></div>
+        <div class="form-row"><label>Пароль</label><input name="password" value="user123" required></div>
+        <div class="form-row"><label>Роль</label><select name="role"><option value="client">Клієнт</option><option value="admin">Адміністратор</option></select></div>
+    </div>
+    <button class="btn" type="submit">Створити</button>
+</form>
+</div>
+<h2>Список акаунтів</h2>
+<table>
+<tr><th>ID</th><th>ПІБ</th><th>Email</th><th>Логін</th><th>Роль</th><th>Статус</th><th>Дії</th></tr>
+{% for u in users %}
+<tr>
+<form method="post" action="{{ url_for('update_user', user_id=u.id) }}">
+<td>{{ u.id }}</td>
+<td><input name="name" value="{{ u.name }}"></td>
+<td><input type="email" name="email" value="{{ u.email }}"></td>
+<td>{{ u.login }}</td>
+<td>
+    <select name="role">
+        <option value="client" {% if u.role=='client' %}selected{% endif %}>Клієнт</option>
+        <option value="admin" {% if u.role=='admin' %}selected{% endif %}>Адміністратор</option>
+        <option value="specialist" {% if u.role=='specialist' %}selected{% endif %}>Спеціаліст</option>
+    </select>
+    {% if u.specialist_id %}<div class="muted">профіль спеціаліста #{{ u.specialist_id }}</div>{% endif %}
+</td>
+<td><select name="status"><option value="active" {% if u.status=='active' %}selected{% endif %}>active</option><option value="blocked" {% if u.status=='blocked' %}selected{% endif %}>blocked</option></select></td>
+<td><input name="password" placeholder="новий пароль, якщо треба"><button class="btn light" type="submit">Зберегти</button></td>
+</form>
+</tr>
+{% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Реєстрація клієнта</h1>
+<p class="muted">Після реєстрації створюється клієнтський акаунт. Адміністратор окремо створює спеціалістів у каталозі.</p>
+<form method="post">
+    <div class="form-row"><label>ПІБ</label><input name="name" required></div>
+    <div class="form-row"><label>Email</label><input type="email" name="email" required></div>
+    <div class="form-row"><label>Логін</label><input name="login" required></div>
+    <div class="form-row"><label>Пароль</label><input type="password" name="password" minlength="6" required></div>
+    <div class="form-row"><label>Повторіть пароль</label><input type="password" name="password2" minlength="6" required></div>
+    <button class="btn" type="submit">Зареєструватися</button>
+    <a class="btn secondary" href="{{ url_for('login') }}">Увійти</a>
+</form>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Вхід до системи</h1>
+<p class="muted">Різні ролі мають різні інтерфейси.</p>
+<div class="cards">
+  <div class="card"><b>Клієнт:</b> client / client123</div>
+  <div class="card"><b>Адміністратор:</b> admin / admin123</div>
+  <div class="card"><b>Спеціаліст:</b> olena / spec123 або iryna / spec123</div>
+</div>
+<form method="post" style="margin-top:20px;max-width:420px">
+    <div class="form-row"><label>Логін</label><input name="login" required></div>
+    <div class="form-row"><label>Пароль</label><input name="password" type="password" required></div>
+    <button class="btn">Увійти</button>
+</form>
+<p style="margin-top:16px">Немає акаунта? <a href="{{ url_for('register') }}">Зареєструватися</a></p>
+{% endblock %}

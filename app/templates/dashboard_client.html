@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Кабінет клієнта</h1>
+<div class="cards">
+    <div class="card"><h3>Створення запису</h3><p>Клієнт обирає послугу, спеціаліста, дату та час.</p><a class="btn" href="{{ url_for('new_booking') }}">Записатися</a></div>
+    <div class="card"><h3>ML-рекомендації</h3><p>Показуються прямо у формі створення запису після вибору дати й спеціаліста.</p></div>
+    <div class="card"><h3>Email-сповіщення</h3><p>Клієнт отримує повідомлення при створенні, підтвердженні, скасуванні та виконанні запису.</p></div>
+</div>
+<h2>Мої записи</h2>
+{% include '_bookings_table.html' %}
+{% include '_notifications_block.html' %}
+{% endblock %}
