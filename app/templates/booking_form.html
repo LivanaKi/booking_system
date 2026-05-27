@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Створення запису</h1>
+<p class="muted">ML-рекомендації вбудовані у форму запису: система радить спеціаліста і час.</p>
+<form method="get" class="card">
+    <h3>1. Оберіть послугу, дату і спеціаліста</h3>
+    <div class="form-row"><label>Послуга для розподілу між фахівцями</label><select name="service_id" required>
+        <option value="">-- оберіть --</option>
+        {% for s in services %}<option value="{{ s.id }}" {% if selected_service_id|string == s.id|string %}selected{% endif %}>{{ s.name }}</option>{% endfor %}
+    </select></div>
+    <div class="form-row"><label>Дата</label><input type="date" name="booking_date" value="{{ selected_date }}" required></div>
+    <div class="form-row"><label>Спеціаліст</label><select name="specialist_id" required>
+        <option value="">-- оберіть --</option>
+        {% for sp in specialists %}<option value="{{ sp.id }}" {% if selected_specialist_id|string == sp.id|string %}selected{% endif %}>{{ sp.name }} — {{ sp.specialization }}</option>{% endfor %}
+    </select></div>
+    <button class="btn secondary">Показати ML-рекомендації</button>
+</form>
+
+{% if allocation_candidates %}
+<div class="recommend">
+    <b>ML-розподіл клієнта між фахівцями:</b>
+    <table><tr><th>Спеціаліст</th><th>Денне навантаження</th><th>Історичне навантаження</th><th>Ризик</th><th>Оцінка</th></tr>
+    {% for a in allocation_candidates %}<tr><td>{{ a.specialist_name }}</td><td>{{ a.daily_load }}</td><td>{{ a.historical_load }}</td><td>{{ a.risk }}</td><td>{{ a.score }}</td></tr>{% endfor %}</table>
+    <p class="muted">Найкращий спеціаліст — перший у таблиці, бо має найменшу оцінку навантаження та ризику.</p>
+</div>
+{% endif %}
+{% if recommendations %}
+<div class="recommend">
+    <b>Рекомендовані часові слоти:</b>
+    {% for slot in recommendations %}<span class="btn light">{{ slot }}</span>{% endfor %}
+    <p class="muted">{{ explanation }}</p>
+</div>
+{% elif explanation %}<div class="recommend">{{ explanation }}</div>{% endif %}
+<form method="post" class="card">
+    <h3>2. Підтвердьте запис</h3>
+    <input type="hidden" name="booking_date" value="{{ selected_date }}">
+    <input type="hidden" name="specialist_id" value="{{ selected_specialist_id }}">
+    {% if session.role == 'admin' %}
+    <div class="form-row"><label>Клієнт</label><select name="client_id">{% for c in clients %}<option value="{{ c.id }}">{{ c.name }}</option>{% endfor %}</select></div>
+    {% endif %}
+    <div class="form-row"><label>Послуга</label><select name="service_id" required>{% for s in services %}<option value="{{ s.id }}" {% if selected_service_id|string == s.id|string %}selected{% endif %}>{{ s.name }} — {{ s.category }}, {{ s.duration_minutes }} хв, {{ s.price }} грн</option>{% endfor %}</select></div>
+    <div class="form-row"><label>Час</label><select name="booking_time" required>
+        {% for slot in slots %}<option value="{{ slot }}" {% if slot in recommendations %}style="font-weight:bold"{% endif %}>{{ slot }}{% if slot in recommendations %} — рекомендовано ML{% endif %}</option>{% endfor %}
+    </select></div>
+    {% if not selected_date or not selected_specialist_id %}<p class="flash">Спочатку оберіть дату і спеціаліста вище.</p>{% endif %}
+    <button class="btn" {% if not selected_date or not selected_specialist_id %}disabled{% endif %}>Створити запис і надіслати email</button>
+</form>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>ML-аналітика та відповідність UML</h1>
+<p class="muted">Ця сторінка реалізує ті частини UML, які раніше були частковими: прогноз попиту, розподіл клієнтів між фахівцями, оптимізація графіку та класифікація клієнтів.</p>
+
+<h2>1. Прогноз попиту на різні послуги</h2>
+<table>
+<tr><th>Послуга</th><th>Історичних записів</th><th>Прогноз попиту</th><th>Частка</th></tr>
+{% for row in demand_forecast %}
+<tr><td>{{ row.service_name }}</td><td>{{ row.history_count }}</td><td><b>{{ row.forecast }}</b></td><td>{{ row.share }}%</td></tr>
+{% endfor %}
+</table>
+
+<h2>2. Розподіл клієнтів між фахівцями</h2>
+<form method="get" class="card"><label>Дата для розрахунку</label><input type="date" name="target_date" value="{{ target_date }}"><button class="btn secondary">Перерахувати</button></form>
+{% for service in services %}
+<h3>{{ service.name }}</h3>
+<table><tr><th>Рекомендований фахівець</th><th>Денне навантаження</th><th>Історичне навантаження</th><th>Ризик</th><th>ML-score</th></tr>
+{% for row in allocation.get(service.id, []) %}
+<tr><td>{{ row.specialist_name }}</td><td>{{ row.daily_load }}</td><td>{{ row.historical_load }}</td><td>{{ row.risk }}</td><td>{{ row.score }}</td></tr>
+{% else %}<tr><td colspan="5">Немає фахівців для цієї послуги</td></tr>{% endfor %}
+</table>
+{% endfor %}
+
+<h2>3. Автоматична оптимізація графіку</h2>
+<table><tr><th>Спеціаліст</th><th>Піковий слот</th><th>Навантаження</th><th>Рекомендована перерва</th><th>Рекомендація</th></tr>
+{% for row in schedule_plan %}
+<tr><td>{{ row.specialist_name }}</td><td>{{ row.peak_slot }}</td><td>{{ row.peak_load }}</td><td>{{ row.recommended_break }}</td><td>{{ row.recommendation }}</td></tr>
+{% endfor %}
+</table>
+
+<h2>4. Класифікація клієнтів</h2>
+<table><tr><th>Клієнт</th><th>Клас</th><th>Усього</th><th>Виконано</th><th>Підтверджено</th><th>Скасовано</th><th>No-show</th></tr>
+{% for row in client_classes %}
+<tr><td>{{ row.client_name }}</td><td><span class="badge">{{ row.label }}</span></td><td>{{ row.total }}</td><td>{{ row.completed }}</td><td>{{ row.confirmed }}</td><td>{{ row.cancelled }}</td><td>{{ row.no_show }}</td></tr>
+{% endfor %}
+</table>
+{% endblock %}

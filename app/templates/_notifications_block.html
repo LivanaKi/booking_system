@@ -1,0 +1,13 @@
+<h2>Email-сповіщення</h2>
+<table>
+<tr><th>Тема</th><th>Канал</th><th>Email</th><th>Статус</th><th>Дата</th></tr>
+{% for n in notifications %}
+<tr>
+<td>{{ n.subject }}<br><span class="muted mini">{{ n.message }}</span></td>
+<td>{{ n.channel }}</td>
+<td>{{ n.email_to }}</td>
+<td>{% if n.is_sent %}<span class="email-ok">сформовано/надіслано</span>{% else %}<span class="email-err">помилка</span>{% endif %}{% if n.error %}<br><span class="muted">{{ n.error }}</span>{% endif %}</td>
+<td>{{ n.created_at }}</td>
+</tr>
+{% else %}<tr><td colspan="5">Сповіщень поки немає</td></tr>{% endfor %}
+</table>

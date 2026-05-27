@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Панель адміністратора / оператора</h1>
+<div class="cards">
+    <div class="card"><h3>Усього записів</h3><p style="font-size:28px"><b>{{ stats.total }}</b></p></div>
+    <div class="card"><h3>Очікують</h3><p style="font-size:28px"><b>{{ stats.new }}</b></p></div>
+    <div class="card"><h3>Підтверджено</h3><p style="font-size:28px"><b>{{ stats.confirmed }}</b></p></div>
+    <div class="card"><h3>Скасовано</h3><p style="font-size:28px"><b>{{ stats.cancelled }}</b></p></div>
+</div>
+<h2>ML-аналітика завантаження персоналу</h2>
+<div class="cards">
+{% for row in load_by_specialist %}
+<div class="card"><b>{{ row.specialist_name }}</b><p>Активних записів: {{ row.total }}</p><div class="bar"><span style="width:{{ [row.total*20,100]|min }}%"></span></div></div>
+{% endfor %}
+</div>
+<h2>ML-прогноз попиту на послуги</h2>
+<div class="cards">
+{% for row in demand_forecast %}
+<div class="card"><b>{{ row.service_name }}</b><p>Прогноз: <b>{{ row.forecast }}</b></p><p class="muted">Частка: {{ row.share }}%</p></div>
+{% endfor %}
+</div>
+<h2>Класифікація клієнтів</h2>
+<table><tr><th>Клієнт</th><th>Клас</th><th>Усього записів</th><th>No-show</th></tr>{% for c in client_classes %}<tr><td>{{ c.client_name }}</td><td><span class="badge">{{ c.label }}</span></td><td>{{ c.total }}</td><td>{{ c.no_show }}</td></tr>{% endfor %}</table>
+<p><a class="btn light" href="{{ url_for('analytics') }}">Відкрити повну ML-аналітику</a></p>
+<h2>Усі записи</h2>
+{% include '_bookings_table.html' %}
+{% include '_notifications_block.html' %}
+{% endblock %}

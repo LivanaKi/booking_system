@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Кабінет спеціаліста</h1>
+<div class="cards">
+    <div class="card"><h3>Мій графік</h3><p>Спеціаліст бачить тільки власні записи.</p></div>
+    <div class="card"><h3>Статуси</h3><p>Може позначити підтверджений запис як виконаний або no-show.</p></div>
+    <div class="card"><h3>Email</h3><p>Отримує сповіщення про нові, підтверджені та скасовані записи.</p></div>
+</div>
+<h2>ML-прогноз навантаження</h2>
+<table><tr><th>Час</th><th>Історичне/активне навантаження</th><th>Індикатор</th></tr>
+{% for item in load %}<tr><td>{{ item.slot }}</td><td>{{ item.load }}</td><td><div class="bar"><span style="width:{{ [item.load*25,100]|min }}%"></span></div></td></tr>{% endfor %}
+</table>
+<h2>Мій розклад</h2>
+{% include '_bookings_table.html' %}
+{% include '_notifications_block.html' %}
+{% endblock %}
