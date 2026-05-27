@@ -1,9 +1,11 @@
+import os
 from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from werkzeug.security import check_password_hash, generate_password_hash
 from .db import init_db, get_connection
 from .ml_recommender import recommend_slots, forecast_load, forecast_service_demand, classify_all_clients, allocate_clients_to_specialists, optimize_schedule, WORKING_SLOTS
 from .notifications import notify_user
+from dotenv import load_dotenv
 
 STATUS_LABELS = {
     "new": "Очікує підтвердження",
@@ -13,10 +15,11 @@ STATUS_LABELS = {
     "no_show": "Не з'явився",
 }
 
+load_dotenv()
 
 def create_app(test_config=None):
     app = Flask(__name__)
-    app.secret_key = "service-booking-lab-secret"
+    app.secret_key = os.getenv("SECRET_KEY", "dev-secret-key")
     if test_config:
         app.config.update(test_config)
     init_db()
